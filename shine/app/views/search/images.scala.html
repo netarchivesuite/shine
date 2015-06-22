@@ -242,7 +242,7 @@
 					   			<div class="input-group">
 					   				@inputText(searchForm("query"), 'id -> "query", 'placeholder -> "Enter search term", 'class -> "form-control search-field")
 					   				<input type="hidden" name="tab" value="results" id="tab" />
-									<input type="hidden" name="facet.in.content_type_norm" value="image" />
+									<input type="hidden" name="facet.in.content_type_norm" value='"image"' />
 									<span class="input-group-btn">
 										<button type="button" class="btn btn-primary" id="search" name="action" value="search">Search</button>
 										<button type="reset" class="btn btn-primary" id="reset" name="action" value="reset">Reset</button>
