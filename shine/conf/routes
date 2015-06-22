@@ -13,6 +13,8 @@ GET     /logout                             controllers.Application.logout
 # Main facets search interface. The query parameter is optional, defaulting to /search?query=*:*
 GET     /search                     		controllers.Search.search(query ?= "", page: Int ?= 1, sort ?= "", order ?= "asc")
 
+GET     /search/images                 		controllers.Search.images_search(query ?= "*:*", page: Int ?= 1, sort ?= "", order ?= "asc")
+
 GET     /search/advanced            		controllers.Search.advanced_search(query ?= "*:*", page: Int ?= 1, sort ?= "", order ?= "asc")
 
 GET     /search/browse            			controllers.Search.browse(query ?= "*:*", page: Int ?= 1, sort ?= "", order ?= "asc")

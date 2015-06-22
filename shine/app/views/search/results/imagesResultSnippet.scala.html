@@ -1,0 +1,34 @@
+@(q: uk.bl.wa.shine.Query, currentPage: uk.bl.wa.shine.Pagination, d: org.apache.solr.common.SolrDocument, index: Int)
+
+@checkBoxValue(document: org.apache.solr.common.SolrDocument) = {
+	@checkValue(document.getFirstValue("id"));;;@checkValue(document.getFirstValue("crawl_date"));;;@checkValue(document.getFirstValue("title"));;;@checkValue(d.getFirstValue("domain"));;;@checkValue(d.getFirstValue("url"));;;@checkValue(d.getFirstValue("wayback_date"))
+}
+
+@checkValue(value: java.lang.Object) = @{
+	if(value == null) {
+		" "
+	} else {
+		value.toString.trim
+	}
+}
+
+<div class="list-group">
+	<div class="list-group-item" href="#">
+		<div class="row">
+			<div class="col-md-8 col-sm-8">
+				<h4 class="list-group-item-heading">
+					@(currentPage.getNextIndex(index)) <a href="@play.Play.application().configuration().getString("shine.web_archive_url")@(d.getFirstValue("wayback_date"))/@(d.getFirstValue("url"))">"@d.getFirstValue("title")"</a>
+				</h4>
+				<p class="list-group-item-text">
+						@utils.Formatter.formatDateTime(d.getFirstValue("crawl_date"))<br />
+						@d.getFirstValue("content_type_norm")<br />
+				</p>
+			</div>
+			<div class="col-md-4 col-sm-4 checkbox">
+			 	<div class="checkbox pull-right">
+			 		<input host="@d.getFirstValue("host")" type="checkbox" name="selectedResource" value="@checkBoxValue(d)" data-toggle="tooltip" data-placement="top" title="select" class="resource">
+			 	</div>
+			</div>
+		</div>
+	</div>
+</div>
