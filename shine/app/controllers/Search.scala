@@ -207,6 +207,50 @@ object Search extends Controller {
     case None => ""
   }
 
+  def images_search(query: String, pageNo: Int, sort: String, order: String) = Action { implicit request =>
+
+    var user: User = null
+    var corpora = List[Corpus]()
+
+    request.session.get("username").map { username =>
+      user = User.findByEmail(username.toLowerCase())
+      corpora = myCorpora(user)
+    }
+
+    val action = request.getQueryString("action")
+    val form = searchForm.bindFromRequest(request.queryString)
+
+    println("action: " + action)
+
+    if (StringUtils.isNotBlank(query)) {
+      val q = doSearchForm(form, request.queryString)
+      val totalRecords = q.res.getResults().getNumFound().intValue()
+
+      println("Page #: " + pageNo)
+      println("totalRecords #: " + totalRecords)
+      println("menu selected: " + q.menu)
+
+      pagination.update(totalRecords, pageNo)
+
+      //	var highlights = q.res.getHighlighting()
+
+      Cache.getAs[Map[String, FacetValue]]("facet.values") match {
+        case Some(value) => {
+          play.api.Logger.debug("getting value from cache ...")
+          Ok(views.html.search.images("Images Search", user, q, pagination, sort, order, facetLimit, solr.getOptionalFacets().asScala.toMap, value, "search", form, sortableFacets, corpora))
+        }
+        case None => {
+          println("None")
+          // doesn't go this far
+          Ok("")
+        }
+      }
+    } else {
+      Ok(views.html.search.images("Images Search", user, null, null, "", "asc", facetLimit, null, null, "search", form, sortableFacets, corpora))
+    }
+
+  }
+
   def advanced_search(query: String, pageNo: Int, sort: String, order: String) = Action { implicit request =>
 
     var user: User = null

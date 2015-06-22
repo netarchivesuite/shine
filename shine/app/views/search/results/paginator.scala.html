@@ -25,6 +25,7 @@
     page match {
     	case "search" => routes.Search.search(q.query, pageNo, sortBy, order)
 	    case "advanced" => routes.Search.advanced_search(q.query, pageNo, sortBy, order)
+		case "images_search" => routes.Search.images_search(q.query, pageNo, sortBy, order)
     }
     
 }
