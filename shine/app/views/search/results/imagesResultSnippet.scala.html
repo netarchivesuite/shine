@@ -29,6 +29,7 @@
 				<p class="list-group-item-text">
 						@utils.Formatter.formatDateTime(d.getFirstValue("crawl_date"))<br />
 						@d.getFirstValue("content_type_norm")<br />
+						<span class="result-host">@d.getFirstValue("host")</span><br />
 				</p>
 			</div>
 			<div class="col-md-4 col-sm-4 checkbox">
