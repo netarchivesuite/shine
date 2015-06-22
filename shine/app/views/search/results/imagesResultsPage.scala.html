@@ -55,8 +55,6 @@
 		<div id="result-set">
 			@if(q != null) {
 				@for((d, index) <- q.res.getResults().zipWithIndex) {
-					@println("------------")
-					@println(d)
 					@(resultSnippets(d, index))
 				}
 			}
