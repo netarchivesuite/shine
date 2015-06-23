@@ -14,10 +14,18 @@
 
 @generateImageURL(document: org.apache.solr.common.SolrDocument) = @{
 	var url = ""
-	url = "http://belinda:9721/webarchiveminetypeservlet/services/image?arcFilePath=" +
+	url = "http://belinda:9721/webarchivemimetypeservlet/services/image?arcFilePath=" +
 			document.getFirstValue("arc_full") +
 			"&offset=" + document.getFirstValue("source_file_s").toString.split("@")(1) +
 			"&height=100&width=100"
+	url
+}
+
+@generateRawImageURL(document: org.apache.solr.common.SolrDocument) = @{
+	var url = ""
+	url = "http://belinda:9721/webarchivemimetypeservlet/services/downloadRaw?arcFilePath=" +
+			document.getFirstValue("arc_full") +
+			"&offset=" + document.getFirstValue("source_file_s").toString.split("@")(1)
 	url
 }
 
@@ -25,7 +33,7 @@
 	<div class="list-group-item" href="#">
 		<div class="row">
 			<div class="col-md-8 col-sm-8">
-				<img src="@generateImageURL(d)" />
+				<a href="@generateRawImageURL(d)"><img src="@generateImageURL(d)" /></a>
 				<p class="list-group-item-text">
 						@utils.Formatter.formatDateTime(d.getFirstValue("crawl_date"))<br />
 						@d.getFirstValue("content_type_norm")<br />
