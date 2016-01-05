@@ -75,7 +75,7 @@ object Search extends Controller {
 
   val recordsPerPage = solr.getPerPage()
   val maxNumberOfLinksOnPage = config.getInt("max_number_of_links_on_page")
-  val maxViewablePages = config.getInt("max_viewable_pages")
+  val maxViewablePages = config.getLong("max_viewable_pages")
   val facetLimit = config.getInt("facet_limit")
   val webArchiveUrl = config.getString("web_archive_url")
 
