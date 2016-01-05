@@ -142,7 +142,7 @@ object Search extends Controller {
 
   def getResults(form: Form[controllers.Search.SearchData], queryString: collection.immutable.Map[String, Seq[String]], pageNo: Int, sort: String, order: String, user: User, sortableFacets: List[Object], corpora: List[Corpus]) = {
     val q = doSearchForm(form, queryString)
-    val totalRecords = q.res.getResults().getNumFound().intValue()
+    val totalRecords = q.res.getResults().getNumFound()
 
     println("Page #: " + pageNo)
     println("totalRecords #: " + totalRecords)
@@ -177,7 +177,7 @@ object Search extends Controller {
         val query = request.getQueryString("query").get
         println("query: " + query)
         val exportList = doExport(query, parameters).asScala.toList
-        //			val totalRecords = q.res.getResults().getNumFound().intValue()
+        //			val totalRecords = q.res.getResults().getNumFound()
         var now = new Date()
         var formattedDate = Formatter.formatDateToDDMMYY(now)
         var heading1 = "Results from the British Library's Shine interface, (webarchive.org.uk/shine), on " + formattedDate + "."
@@ -224,7 +224,7 @@ object Search extends Controller {
 
     if (StringUtils.isNotBlank(query)) {
       val q = doSearchForm(form, request.queryString)
-      val totalRecords = q.res.getResults().getNumFound().intValue()
+      val totalRecords = q.res.getResults().getNumFound()
 
       println("Page #: " + pageNo)
       println("totalRecords #: " + totalRecords)
@@ -266,7 +266,7 @@ object Search extends Controller {
 
     println("advancedData: " + form.data)
 
-    val totalRecords = q.res.getResults().getNumFound().intValue()
+    val totalRecords = q.res.getResults().getNumFound()
 
     println("Page #: " + pageNo)
     println("totalRecords #: " + totalRecords)
@@ -290,7 +290,7 @@ object Search extends Controller {
     println("browse")
     val q = doBrowse(query, request.queryString)
 
-    val totalRecords = q.res.getResults().getNumFound().intValue()
+    val totalRecords = q.res.getResults().getNumFound()
 
     println("Page #: " + pageNo)
     println("totalRecords #: " + totalRecords)
@@ -313,7 +313,7 @@ object Search extends Controller {
     val form = searchForm.bindFromRequest(request.queryString)
     val q = doSearchForm(form, request.queryString)
 
-    val totalRecords = q.res.getResults().getNumFound().intValue()
+    val totalRecords = q.res.getResults().getNumFound()
 
     println("totalRecords #: " + totalRecords)
 
@@ -386,7 +386,7 @@ object Search extends Controller {
 
         println("query: " + q.query);
 
-        val totalRecords = q.res.getResults().getNumFound().intValue()
+        val totalRecords = q.res.getResults().getNumFound()
         println("totalRecords: " + totalRecords);
 
         var listMap: Map[String, ListBuffer[GraphData]] = getGraphData(q)
@@ -495,7 +495,7 @@ object Search extends Controller {
 
     val q = doAjaxSearch(queryString, parameters)
 
-    val totalRecords = q.res.getResults().getNumFound().intValue()
+    val totalRecords = q.res.getResults().getNumFound()
 
     println("Page #: " + pageNo)
     println("totalRecords #: " + totalRecords)
@@ -730,7 +730,7 @@ object Search extends Controller {
     val subCollections = queryResponse.getFacetField("collections")
     println("facetQuery: " + subCollections)
 
-    val totalRecords = results.getNumFound().intValue()
+    val totalRecords = results.getNumFound()
 
     println("totalRecords #: " + totalRecords)
 

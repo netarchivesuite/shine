@@ -6,13 +6,13 @@ import java.util.List;
 
 public class Pagination {
 
-    private int currentPage = 1;
-    private int totalItems;
+    private long currentPage = 1;
+    private long totalItems;
     private int itemsPerPage;
     private int maxNumberOfLinksOnPage; // i.e 10 links per page
-    private int maxViewablePages; // i.e 50 pages max
+    private long maxViewablePages; // i.e 50 pages max
 
-    private int totalPages = 0;
+    private long totalPages = 0;
     
     DecimalFormat idf = new DecimalFormat("##,###");
 
@@ -20,7 +20,7 @@ public class Pagination {
     // The Pager should only show ten page numbers at once, and should only allow 50 pages to be viewed. 
     // On the last page of results, you should instead get a warning that you can't page any deeper.
 
-    public Pagination(int itemsPerPage, int maxNumberOfLinksOnPage, int maxViewablePages) {
+    public Pagination(int itemsPerPage, int maxNumberOfLinksOnPage, long maxViewablePages) {
     	this.itemsPerPage = itemsPerPage;
     	this.maxNumberOfLinksOnPage = maxNumberOfLinksOnPage; // 10
     	this.maxViewablePages = maxViewablePages; // 500
@@ -29,7 +29,7 @@ public class Pagination {
         }
     }
     
-    public void update(int totalItems, int pageNo) {
+    public void update(long totalItems, long pageNo) {
 
         this.totalItems = totalItems;
         // Place hard upper limit on paging
@@ -42,11 +42,11 @@ public class Pagination {
         this.currentPage = pageNo;
     }
 
-    public int getCurrentPage() {
+    public long getCurrentPage() {
         return currentPage;
     }
    
-    public void setCurrentPage(int currentPage) {
+    public void setCurrentPage(long currentPage) {
         if (currentPage > totalPages) {
             currentPage = totalPages;
         }
@@ -56,7 +56,7 @@ public class Pagination {
         this.currentPage = currentPage;
     }
 
-    public int getTotalPages() {
+    public long getTotalPages() {
         return this.totalPages;
     }
 
@@ -68,7 +68,7 @@ public class Pagination {
         return currentPage < totalPages;
     }
 
-    public int getPreviousPage() {
+    public long getPreviousPage() {
         if (hasPreviousPage()) {
             return currentPage - 1;
         } else {
@@ -76,7 +76,7 @@ public class Pagination {
         }
     }
 
-    public int getNextPage() {
+    public long getNextPage() {
         if (hasNextPage()) {
             return currentPage + 1;
         } else {
@@ -84,41 +84,41 @@ public class Pagination {
         }
     }
 
-    public int getStartIndex() {
+    public long getStartIndex() {
         return (this.currentPage - 1) * this.itemsPerPage + 1;
     }
     
-    public int getNextIndex(int currentIndex) {
+    public long getNextIndex(long currentIndex) {
     	return getStartIndex()+currentIndex;
     }
 
-    public int getEndIndex() {
-        int endIndex = this.currentPage * this.itemsPerPage;
+    public long getEndIndex() {
+        long endIndex = this.currentPage * this.itemsPerPage;
         if (endIndex > this.totalItems) {
             endIndex = this.totalItems;
         }
         return endIndex;
     }
 
-    public int getTotalItems() {
+    public long getTotalItems() {
         return totalItems;
     }
     
-    public List<Integer> getPagesList() {
-    	int radius = this.maxNumberOfLinksOnPage / 2;
-        List<Integer> pageList = new ArrayList<Integer>();
+    public List<Long> getPagesList() {
+    	long radius = this.maxNumberOfLinksOnPage / 2;
+        List<Long> pageList = new ArrayList<Long>();
         
-        int startPage = getCurrentPage() - radius;
+        long startPage = getCurrentPage() - radius;
         if (startPage < 1) {
             startPage = 1;
         }
         
-        int endPage = getCurrentPage() + radius;
+        long endPage = getCurrentPage() + radius;
         if (endPage > getTotalPages()) {
             endPage = getTotalPages();
         }
         
-        for (int page = startPage; page <= endPage; page++) {
+        for (long page = startPage; page <= endPage; page++) {
             pageList.add(page);
         }
         
@@ -127,9 +127,9 @@ public class Pagination {
     }
     
 	public String getDisplayXtoYofZ(String to, String of) {
-        int first = this.getStartIndex();
-        int last = this.getEndIndex();
-        int total = this.getTotalItems();
+        long first = this.getStartIndex();
+        long last = this.getEndIndex();
+        long total = this.getTotalItems();
 
         String displayText = idf.format(first)+to+idf.format(last)+of+idf.format(total);
         if (first > total) {
@@ -142,7 +142,7 @@ public class Pagination {
 		return maxNumberOfLinksOnPage;
 	}
 
-	public int getMaxViewablePages() {
+	public long getMaxViewablePages() {
 		return maxViewablePages;
 	}
 	
