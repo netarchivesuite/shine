@@ -36,6 +36,7 @@
 				<a href="@generateRawImageURL(d)"><img src="@generateImageURL(d)" /></a>
 				<p class="list-group-item-text">
 						@utils.Formatter.formatDateTime(d.getFirstValue("crawl_date"))<br />
+						@d.getFirstValue("url")<br />
 						@d.getFirstValue("content_type_norm")<br />
 						<span class="result-host">@d.getFirstValue("host")</span><br />
 				</p>
