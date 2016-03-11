@@ -88,7 +88,7 @@ object Search extends Controller {
     solr.getFacetValues.asScala.toMap
   }
 
-  def search(query: String, pageNo: Int, sort: String, order: String) = Action { implicit request =>
+  def search(query: String, pageNo: Long, sort: String, order: String) = Action { implicit request =>
 
     var user: User = null
     var corpora = List[Corpus]()
@@ -140,7 +140,7 @@ object Search extends Controller {
     }
   }
 
-  def getResults(form: Form[controllers.Search.SearchData], queryString: collection.immutable.Map[String, Seq[String]], pageNo: Int, sort: String, order: String, user: User, sortableFacets: List[Object], corpora: List[Corpus]) = {
+  def getResults(form: Form[controllers.Search.SearchData], queryString: collection.immutable.Map[String, Seq[String]], pageNo: Long, sort: String, order: String, user: User, sortableFacets: List[Object], corpora: List[Corpus]) = {
     val q = doSearchForm(form, queryString)
     val totalRecords = q.res.getResults().getNumFound()
 
@@ -207,7 +207,7 @@ object Search extends Controller {
     case None => ""
   }
 
-  def images_search(query: String, pageNo: Int, sort: String, order: String) = Action { implicit request =>
+  def images_search(query: String, pageNo: Long, sort: String, order: String) = Action { implicit request =>
 
     var user: User = null
     var corpora = List[Corpus]()
@@ -251,7 +251,7 @@ object Search extends Controller {
 
   }
 
-  def advanced_search(query: String, pageNo: Int, sort: String, order: String) = Action { implicit request =>
+  def advanced_search(query: String, pageNo: Long, sort: String, order: String) = Action { implicit request =>
 
     var user: User = null
     var corpora = List[Corpus]()
@@ -286,7 +286,7 @@ object Search extends Controller {
     }
   }
 
-  def browse(query: String, pageNo: Int, sort: String, order: String) = Action { implicit request =>
+  def browse(query: String, pageNo: Long, sort: String, order: String) = Action { implicit request =>
     println("browse")
     val q = doBrowse(query, request.queryString)
 

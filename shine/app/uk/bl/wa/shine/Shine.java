@@ -46,7 +46,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class Shine extends Solr {
 
 	private int perPage;
-	private int csvMaxLimit;
+	private long csvMaxLimit;
 	private int csvIntervalLimit;
 	private String shards;
 	private FacetService facetService = null;
@@ -55,7 +55,7 @@ public class Shine extends Solr {
 		super(config);
 		this.facetService = new FacetServiceImpl(config);
 		this.perPage = config.getInt("per_page");
-		this.csvMaxLimit = config.getInt("csv_max_limit");
+		this.csvMaxLimit = config.getLong("csv_max_limit");
 		this.csvIntervalLimit = config.getInt("csv_interval_limit");
 		this.shards = config.getString("shards");
 	}
@@ -109,7 +109,7 @@ public class Shine extends Solr {
 		return this.search(query, rows, null);
 	}
 	
-	public Query search(Query query, int rows, Integer start) throws ShineException {
+	public Query search(Query query, int rows, Long start) throws ShineException {
 		return this.search(query, buildInitialParameters(query), rows, start);
 	}
 	
@@ -121,14 +121,14 @@ public class Shine extends Solr {
 		return this.graph(query, buildInitialParameters(query));
 	}
 	
-	public int roundUp(int num, int divisor) {
+	public long roundUp(long num, long divisor) {
 	    int sign = (num > 0 ? 1 : -1) * (divisor > 0 ? 1 : -1);
 	    return sign * (abs(num) + abs(divisor) - 1) / abs(divisor);
 	}
 	
 	public List<SearchData> export(Query query) throws ShineException {
 		Query q = this.search(query, 0);
-		int total = (int)q.res.getResults().getNumFound();
+		long total = (int)q.res.getResults().getNumFound();
 		
 		if (total > this.csvMaxLimit) {
 			total = this.csvMaxLimit;
@@ -156,17 +156,17 @@ public class Shine extends Solr {
 //		&rows=10
 //		0, 500, 1000, 1500
 //		int times = total / this.csvIntervalLimit;
-		int times = this.roundUp(total, this.csvIntervalLimit);
+		long times = this.roundUp(total, this.csvIntervalLimit);
 		
-		int start = 0;
+		long start = 0;
 		
 		List<SearchData> exportDataList = new ArrayList<SearchData>();
 		// 61 / 1000 / 0 / 0
 		Logger.debug(total + " / " +  this.csvIntervalLimit + "  = " + times + " ... start " + start);
-		for (int i = 0; i < times; i++) {
+		for (long i = 0; i < times; i++) {
 //			solrParameters.setStart(start); // than increment
 //			Query search = doSearch(query, solrParameters);			
-			Query search = search(query, this.csvIntervalLimit, Integer.valueOf(start));
+			Query search = search(query, this.csvIntervalLimit, Long.valueOf(start));
 			Logger.debug("in chunks total: " + search.res.getResults().getNumFound());
 			Logger.debug("Export Query: " + query.parameters);
 			Logger.debug(total + " / " +  this.csvIntervalLimit + "  = " + times + " ... start " + start);
@@ -188,7 +188,7 @@ public class Shine extends Solr {
 		return exportDataList;
 	}
 	
-	private Query search(Query query, SolrQuery solrParameters, int rows, Integer start) throws ShineException {
+	private Query search(Query query, SolrQuery solrParameters, int rows, Long start) throws ShineException {
 		
 	    solrParameters.setHighlight(true).setHighlightSnippets(10); //set other params as needed
 	    
