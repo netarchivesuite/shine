@@ -1,0 +1,21 @@
+# Compiling shine under ubuntu
+
+Shine requires Java, scala and play.
+
+1) Install Java from Oracle or other source
+
+2) Install scala with
+  sudo apt-get install scala
+
+3) Download minimal activator from
+https://playframework.com/download
+unzip and run ./activator to get basic initialization. Add the activator-folder to the path
+Alternatively download the full activator and use that.
+Alternatively read https://gist.github.com/patarkf/ab2c976b6f89edf90f63
+
+4) Go to the shine sub-folder and run
+  activator play
+(takes a while the first time, unless the full activator package was installed)
+A play-propt should be available. Type
+  compile
+
