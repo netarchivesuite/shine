@@ -74,7 +74,7 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
   }
 
 
-  def search(query: String, pageNo: Int, sort: String, order: String) = Actions.UserAction { implicit request =>
+  def search(query: String, pageNo: Int, sort: String, order: String) = controllers.Requests.AuthenticatedOrAnonymousSearchAllowed { implicit request =>
     val user = request.user
     val corpora = if (user != null) myCorpora(user) else List[Corpus]()
 
