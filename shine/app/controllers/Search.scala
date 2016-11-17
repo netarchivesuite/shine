@@ -6,6 +6,7 @@ import controllers.Requests.Actions
 import com.google.inject.Inject
 import com.google.inject.name.Named
 import com.google.inject.Singleton
+import com.typesafe.config.ConfigFactory
 import models.{User, _}
 import org.apache.commons.lang3.StringUtils
 import play.api.cache.CacheApi
@@ -73,6 +74,12 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
     solr.getFacetValues.asScala.toMap
   }
 
+  def showRecord(id : String) = Actions.UserAction { implicit request =>
+    val host = shineConfig.getString("host").get
+    val docJava = SolrJavaClient.getById(host, id)
+
+    Ok(views.html.search.showRecord(docJava, request.user))
+  }
 
   def search(query: String, pageNo: Int, sort: String, order: String) = Actions.UserAction { implicit request =>
     val user = request.user
