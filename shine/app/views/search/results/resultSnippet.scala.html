@@ -23,6 +23,7 @@
 						@utils.Formatter.formatDateTime(d.getFirstValue("crawl_date"))<br />
 						@d.getFirstValue("content_type_norm")<br />
 						<span class="result-host">@d.getFirstValue("host")</span><br />
+						<a href="@routes.Search.showRecord(d.getFirstValue("id").toString)">Vis fuldpost</a><br />
 						@d.getFirstValue("sentiment_score")
 						@if(q.res.getHighlighting().get(d.getFirstValue("id")) != null) {
 						<hr />
@@ -32,8 +33,8 @@
 							@if(q.res.getHighlighting().get(d.getFirstValue("id")).get("url") != null) {
 	     						<p class="list-group-item-text">@(Html(q.res.getHighlighting().get(d.getFirstValue("id")).get("url").get(0)))</p>
 							}
-		 					@if(q.res.getHighlighting().get(d.getFirstValue("id")).get("content_text") != null) {
-		 						<p class="list-group-item-text">@(Html(q.res.getHighlighting().get(d.getFirstValue("id")).get("content_text").get(0)))</p>
+		 					@if(q.res.getHighlighting().get(d.getFirstValue("id")).get("content") != null) {
+		 						<p class="list-group-item-text">@(Html(q.res.getHighlighting().get(d.getFirstValue("id")).get("content").get(0)))</p>
 		 					}
 						}
 				</p>
