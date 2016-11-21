@@ -85,6 +85,12 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
     val user = request.user
     val corpora = if (user != null) myCorpora(user) else List[Corpus]()
 
+    // Function to reset the page on new searches. Check if the oldquery matches newquery.
+    val calculatedPage = request.getQueryString("oldquery") match {
+      case Some(value) => { if (value != query) 1 else pageNo }   // oldquery is set, if oldquery is different from query set page to 1. Else use pageNo.
+      case None => pageNo                                         // oldquery is not set, use pageNo.
+    }
+
     val action = request.getQueryString("action")
     val form = searchForm.bindFromRequest(request.queryString)
 
@@ -101,14 +107,14 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
             var parameters = collection.immutable.Map(request.queryString.toSeq: _*)
             resetParameters(parameters)
             println("resetted parameters: " + parameters)
-            getResults(form, request.queryString, pageNo, sort, order, user, corpora)
+            getResults(form, request.queryString, calculatedPage, sort, order, user, corpora)
           case "add-facet" =>
             println("add-facet")
-            getResults(form, request.queryString, pageNo, sort, order, user, corpora)
+            getResults(form, request.queryString, calculatedPage, sort, order, user, corpora)
           case "search" =>
             println("searching")
             if (StringUtils.isNotBlank(query)) {
-              getResults(form, request.queryString, pageNo, sort, order, user, corpora)
+              getResults(form, request.queryString, calculatedPage, sort, order, user, corpora)
             } else {
               play.api.Logger.debug("blank query: " + query)
               Ok(views.html.search.search("Search", user, null, null, "", "asc", facetLimit, null, null, "search", form, corpora))

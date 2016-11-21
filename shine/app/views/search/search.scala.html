@@ -251,6 +251,8 @@
 										</ul>
 							      	</div><!-- /btn-group -->			
 					   				@inputText(searchForm("query"), 'id -> "query", 'placeholder -> "Enter search term", 'class -> "form-control search-field")
+									<!-- The field oldquery is set here to detect when the query is changed, and then set the page to 1 -->
+									<input type="hidden" name="oldquery" value="@q.query">
 					   				<input type="hidden" name="tab" value="results" id="tab" />
 									<span class="input-group-btn">
 										<button type="button" class="btn btn-primary" id="search" name="action" value="search">Search</button>
