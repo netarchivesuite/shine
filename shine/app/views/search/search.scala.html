@@ -309,6 +309,7 @@
 										<button type="button" class="btn btn-primary" id="mode" name="action" value="mode">Normal Mode</button>
 									</span>-->
 					   				@inputText(searchForm("query"), 'id -> "query", 'placeholder -> "Enter search term", 'class -> "form-control search-field")
+					   				<input type="hidden" name="sort" value="score" />
 					   				<input type="hidden" name="tab" value="results" id="tab" />
 									<span class="input-group-btn">
 										<button id="search" type="button" class="btn btn-primary" name="action" value="search">Search</button>
