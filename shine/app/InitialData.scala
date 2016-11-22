@@ -76,9 +76,9 @@ class InitialData {
       user.roles.add(role)
 
     } else if (user.email.matches("^(.*?[A-Z]){1,}.*$")) {
-      println("convert user found: " + user.email)
+      play.api.Logger.debug("convert user found: " + user.email)
       val lowerCaseEmail = user.email.toLowerCase()
-      println("convert user found: " + user.email + " to " + lowerCaseEmail)
+      play.api.Logger.debug("convert user found: " + user.email + " to " + lowerCaseEmail)
       User.updatePassword(lowerCaseEmail, "secret")
       User.updateEmail(user.email, lowerCaseEmail)
     }

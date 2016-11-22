@@ -43,9 +43,7 @@ public class Concordance {
 		for( Count y : f.getValues() ) {
 			pages.put(y.getName(), y.getCount());
 			total_pages += y.getCount();
-			//sSystem.out.println("Putted "+y.getName()+" "+y.getCount());
 		}
-		System.out.println("Total Pages: "+total_pages);
 		
 		SolrQuery p = new SolrQuery("\"sherlock holmes\"");
 		p.addSort("pubdate_dt", ORDER.asc);
@@ -61,9 +59,7 @@ public class Concordance {
 		p.setFacetSort("index");
 		
 		QueryResponse r = ss.query(p);
-		
-		// Number of results:
-		System.out.println("Matches: "+r.getResults().getNumFound()+" of " +total_pages+" pages.");
+
 
 		// Facet summary:
 		f  = r.getFacetField("year_s");

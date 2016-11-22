@@ -4,7 +4,7 @@
     if (cachedFacets != null) {
 		cachedFacets.get(facetName) match {
 	      case Some(value) => { value.getValue }
-	      case None => { println("nothing") }
+	      case None => {  }
 		}
 	}
 }
@@ -26,10 +26,8 @@
     	// f.public_suffix.facet.sort=index, f.crawl_year.facet.sort=index
     	// facet.out.public_suffix
     	var prop = q.menu.get(facetName)
-//    	println(facetName + "=" + value)
     	if(prop != null) {
     		if(prop.equals(value)) {
-	    		println("selected: " + facetName + "=" + prop + " - " + value)
 				<span class='glyphicon glyphicon-ok'></span>
 			}
 		}
