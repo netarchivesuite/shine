@@ -1,17 +1,17 @@
 <configuration>
-	<conversionRule conversionWord="coloredLevel" converterClass="play.api.Logger$ColoredLevel" />
+	<conversionRule conversionWord="coloredLevel" converterClass="play.api.libs.logback.ColoredLevel" />
 	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
-		<file>/var/log/shine.log</file>
+		<file>logs/shine.log</file>
 		<encoder>
-			<pattern>%date %coloredLevel %logger{15} - %message%n%xException{5}</pattern>
+			<pattern>%date %level %logger{15} - %message%n%xException{5}</pattern>
 		</encoder>
 	</appender>
 
-	<logger name="play" level="WARN" />
-	<logger name="application" level="WARN" />
-	<logger name="uk.bl" level="WARN" />
+	<logger name="play" level="INFO" />
+	<logger name="application" level="INFO" />
+	<logger name="uk.bl" level="INFO" />
 
-	<root level="ERROR">
+	<root level="INFO">
 		<appender-ref ref="FILE" />
 	</root>
 </configuration>

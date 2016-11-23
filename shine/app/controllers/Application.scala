@@ -43,7 +43,7 @@ class Application @Inject() (implicit @Named("ShineConfiguration") shineConfig: 
     if (user != null) {
       val storedPassword = user.password
       val authenticate = PasswordHash.validatePassword(password, storedPassword)
-      println("validating: " + authenticate)
+      play.api.Logger.debug("validating: " + authenticate)
       authenticate
     } else {
       false
@@ -61,7 +61,7 @@ class Application @Inject() (implicit @Named("ShineConfiguration") shineConfig: 
     * Handle login form submission.
     */
   def authenticate = Action { implicit request =>
-    println("authenticate")
+    play.api.Logger.debug("authenticate")
     loginForm.bindFromRequest.fold(
       formWithErrors => BadRequest(html.login(formWithErrors, "Login")),
       account => Redirect(routes.Application.index).withSession("username" -> account._1)

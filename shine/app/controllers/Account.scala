@@ -34,7 +34,7 @@ class Account @Inject() (implicit val messagesApi: MessagesApi, @Named("ShineCon
   }
 
   def updatePassword() = Actions.AuthenticatedUserAction { implicit request =>
-    println("updatePassword")
+    play.api.Logger.debug("updatePassword")
     val user = request.user
 
     passwordForm.bindFromRequest.fold(
@@ -70,11 +70,11 @@ class Account @Inject() (implicit val messagesApi: MessagesApi, @Named("ShineCon
       // insert stuff
       //Ok(views.html.mySearches("My Searches", user))
       // redirect back to search you just saved.
-      println("summary: " + summary)
+      play.api.Logger.debug("summary: " + summary)
       val newSummary = summary.replace("<li>", " ").replace("</li><li>", " ").replace("</li>", " ").trim()
-      println("newSummary: " + newSummary)
+      play.api.Logger.debug("newSummary: " + newSummary)
       val search = models.Search.create(name, description, newSummary, url, user.id)
-      println("saved search: " + search.name + " - " + search.summary + " - " + search.url + " - " + search.user_id)
+      play.api.Logger.debug("saved search: " + search.name + " - " + search.summary + " - " + search.url + " - " + search.user_id)
       Ok("false")
       //Redirect(routes.Account.mySearches).flashing("success" -> "Search was added")
   }
@@ -100,7 +100,7 @@ class Account @Inject() (implicit val messagesApi: MessagesApi, @Named("ShineCon
       var results = Json.arr()
 
       for (c <- myCorpora.asScala) {
-        println("c: " + c.name)
+        play.api.Logger.debug("c: " + c.name)
         val json = Json.obj("id" -> JsNumber(c.id.longValue()), "name" -> JsString(c.name))
         results = results :+ json
       }
@@ -118,7 +118,7 @@ class Account @Inject() (implicit val messagesApi: MessagesApi, @Named("ShineCon
   // TODO: This should verify ownership of the corpus.
   def saveResources(id: String, resources: String) = Actions.AuthenticatedAction { implicit request =>
     val corpus = models.Corpus.find(id.toLong)
-    println("Corpus found: " + corpus)
+    play.api.Logger.debug("Corpus found: " + corpus)
     val res = resources.split(",,,,,")
 
     for (resource <- res) {
@@ -128,7 +128,7 @@ class Account @Inject() (implicit val messagesApi: MessagesApi, @Named("ShineCon
       val url = r(4)
       val wayback = r(5)
       val waybackDate = Formatter.getDate(wayback)
-      println("id: " + id + " " + title + " " + waybackDate)
+      play.api.Logger.debug("id: " + id + " " + title + " " + waybackDate)
       val res = new models.Resource(title, url, id, waybackDate)
       res.corpus = corpus
       res.save()

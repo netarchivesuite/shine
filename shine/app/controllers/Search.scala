@@ -94,25 +94,25 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
     val action = request.getQueryString("action")
     val form = searchForm.bindFromRequest(request.queryString)
 
-    println("action: " + action)
+    play.api.Logger.debug("action: " + action)
 
     action match {
       case Some(parameter) => {
-        println("parameter: " + parameter)
-        println("action " + parameter)
+        play.api.Logger.debug("parameter: " + parameter)
+        play.api.Logger.debug("action " + parameter)
         parameter match {
           case "resetfacets" =>
-            println("resetting facets back to defaults")
+            play.api.Logger.debug("resetting facets back to defaults")
             solr.resetFacets()
             var parameters = collection.immutable.Map(request.queryString.toSeq: _*)
             resetParameters(parameters)
-            println("resetted parameters: " + parameters)
+            play.api.Logger.debug("resetted parameters: " + parameters)
             getResults(form, request.queryString, calculatedPage, sort, order, user, corpora)
           case "add-facet" =>
-            println("add-facet")
+            play.api.Logger.debug("add-facet")
             getResults(form, request.queryString, calculatedPage, sort, order, user, corpora)
           case "search" =>
-            println("searching")
+            play.api.Logger.debug("searching")
             if (StringUtils.isNotBlank(query)) {
               getResults(form, request.queryString, calculatedPage, sort, order, user, corpora)
             } else {
@@ -122,7 +122,7 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
         }
       }
       case None => {
-        println("no action do search")
+        play.api.Logger.debug("no action do search")
         if (StringUtils.isNotBlank(query)) {
           getResults(form, request.queryString, pageNo, sort, order, user, corpora)
         } else {
@@ -137,9 +137,9 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
     val q = doSearchForm(form, queryString)
     val totalRecords = q.res.getResults().getNumFound().intValue()
 
-    println("Page #: " + pageNo)
-    println("totalRecords #: " + totalRecords)
-    println("menu selected: " + q.menu)
+    play.api.Logger.debug("Page #: " + pageNo)
+    play.api.Logger.debug("totalRecords #: " + totalRecords)
+    play.api.Logger.debug("menu selected: " + q.menu)
 
     pagination.update(totalRecords, pageNo)
 
@@ -151,7 +151,7 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
         Ok(views.html.search.search("Search", user, q, pagination, sort, order, facetLimit, solr.getOptionalFacets().asScala.toMap, value, "search", form, corpora))
       }
       case None => {
-        println("None")
+        play.api.Logger.debug("None")
         // doesn't go this far
         Ok("")
       }
@@ -159,16 +159,16 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
   }
 
   def export(exportType: String, version: String, summary: String) = Actions.UserAction { implicit request =>
-    println(exportType + " - " + version)
+    play.api.Logger.debug(exportType + " - " + version)
     val user = request.user
 
     exportType match {
       case "csv" => {
         var parameters = collection.immutable.Map(request.queryString.toSeq: _*)
         val query = request.getQueryString("query").get
-        println("query: " + query)
-        println("summary: " + summary)
-        println("version: " + version)
+        play.api.Logger.debug("query: " + query)
+        play.api.Logger.debug("summary: " + summary)
+        play.api.Logger.debug("version: " + version)
         val exportList = doExport(query, parameters)
         //			val totalRecords = q.res.getResults().getNumFound().intValue()
         var now = new Date()
@@ -197,12 +197,12 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
     val form = searchForm.bindFromRequest(request.queryString)
     val q = doSearchForm(form, request.queryString)
 
-    println("advancedData: " + form.data)
+    play.api.Logger.debug("advancedData: " + form.data)
 
     val totalRecords = q.res.getResults().getNumFound().intValue()
 
-    println("Page #: " + pageNo)
-    println("totalRecords #: " + totalRecords)
+    play.api.Logger.debug("Page #: " + pageNo)
+    play.api.Logger.debug("totalRecords #: " + totalRecords)
 
     pagination.update(totalRecords, pageNo)
 
@@ -212,7 +212,7 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
         Ok(html.search.advanced("Advanced Search", user, q, pagination, sort, order, "search", form, corpora, facetLimit, solr.getOptionalFacets().asScala.toMap, value))
       }
       case None => {
-        println("None")
+        play.api.Logger.debug("None")
         // doesn't go this far
         Ok("")
       }
@@ -220,29 +220,29 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
   }
 
   def browse(query: String, pageNo: Int, sort: String, order: String) = Actions.UserAction { implicit request =>
-    println("browse")
+    play.api.Logger.debug("browse")
     val q = doBrowse(query, request.queryString)
 
     val totalRecords = q.res.getResults().getNumFound().intValue()
 
-    println("Page #: " + pageNo)
-    println("totalRecords #: " + totalRecords)
-    println("sort #: " + sort)
-    println("order #: " + order)
+    play.api.Logger.debug("Page #: " + pageNo)
+    play.api.Logger.debug("totalRecords #: " + totalRecords)
+    play.api.Logger.debug("sort #: " + sort)
+    play.api.Logger.debug("order #: " + order)
 
     pagination.update(totalRecords, pageNo)
     Ok(views.html.search.browse("Browse", request.user, q, pagination, sort, order, "search"))
   }
 
   def concordance(query: String) = Actions.UserAction { implicit request =>
-    println("advanced_search")
+    play.api.Logger.debug("advanced_search")
 
     val form = searchForm.bindFromRequest(request.queryString)
     val q = doSearchForm(form, request.queryString)
 
     val totalRecords = q.res.getResults().getNumFound().intValue()
 
-    println("totalRecords #: " + totalRecords)
+    play.api.Logger.debug("totalRecords #: " + totalRecords)
     Ok(views.html.search.concordance("Concordance", request.user, q, "concordance"))
   }
 
@@ -258,7 +258,7 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
     if (StringUtils.isBlank(yearEnd)) {
       yearEnd = shineConfig.getString("default_end_year").get
     }
-    println("yearEnd: " + yearEnd)
+    play.api.Logger.debug("yearEnd: " + yearEnd)
 
     var values = query.split(",")
 
@@ -266,24 +266,24 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
   }
 
   def processChart = Action { implicit request =>
-    println("processChart: " + request.queryString)
+    play.api.Logger.debug("processChart: " + request.queryString)
     val query = request.getQueryString("query")
     val yearStart = request.getQueryString("year_start")
     val yearEnd = request.getQueryString("year_end")
-    println("query: " + query)
-    println("yearStart" + yearStart)
-    println("yearEnd: " + yearEnd)
+    play.api.Logger.debug("query: " + query)
+    play.api.Logger.debug("yearStart" + yearStart)
+    play.api.Logger.debug("yearEnd: " + yearEnd)
 
     var queryString: String = {
       var value = " "
       query match {
         case Some(parameter) => {
-          println("parameter: " + parameter)
+          play.api.Logger.debug("parameter: " + parameter)
           value = parameter
 
         }
         case None => {
-          println("None")
+          play.api.Logger.debug("None")
         }
       }
       value
@@ -300,10 +300,10 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
         val value = text.trim
         val q = doGraph(value, request.queryString)
 
-        println("query: " + q.query);
+        play.api.Logger.debug("query: " + q.query);
 
         val totalRecords = q.res.getResults().getNumFound().intValue()
-        println("totalRecords: " + totalRecords);
+        play.api.Logger.debug("totalRecords: " + totalRecords);
 
         var listMap: Map[String, ListBuffer[GraphData]] = getGraphData(q)
 
@@ -313,10 +313,10 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
           // "nhs" -> array
           var array = Json.arr()
           for ((key, value) <- listMap) {
-            println(key + "-->" + value)
+            play.api.Logger.debug(key + "-->" + value)
             value.map(graphData => {
               val jsonObject = Json.obj("value" -> JsString(graphData.getValue()), "count" -> JsNumber(graphData.getCount()))
-              println(graphData.getValue() + " " + graphData.getCount())
+              play.api.Logger.debug(graphData.getValue() + " " + graphData.getCount())
               array = array :+ jsonObject
             })
           }
@@ -330,7 +330,7 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
       jsonArray
     }
 
-    println("resultList: " + result)
+    play.api.Logger.debug("resultList: " + result)
     Ok(result)
   }
 
@@ -364,7 +364,7 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
   def doAjaxSearch(query: String, parameters: Map[String, Seq[String]]) = {
     // parses parameters and creates me a query object
     var q = createQuery(query, parameters)
-    println("new query created: " + q.facets)
+    play.api.Logger.debug("new query created: " + q.facets)
     solr.search(q)
   }
 
@@ -372,19 +372,19 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
     val query = request.getQueryString("query")
     val page = request.getQueryString("page")
 
-    println("request: " + request)
-    println("queryString: " + request.queryString)
+    play.api.Logger.debug("request: " + request)
+    play.api.Logger.debug("queryString: " + request.queryString)
 
     var queryString: String = {
       var value = ""
       query match {
         case Some(parameter) => {
-          println("parameter: " + parameter)
+          play.api.Logger.debug("parameter: " + parameter)
           value = parameter
 
         }
         case None => {
-          println("None")
+          play.api.Logger.debug("None")
         }
       }
       value
@@ -394,18 +394,18 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
       var value = ""
       page match {
         case Some(parameter) => {
-          println("parameter: " + parameter)
+          play.api.Logger.debug("parameter: " + parameter)
           value = parameter
 
         }
         case None => {
-          println("None")
+          play.api.Logger.debug("None")
         }
       }
       value.toInt
     }
 
-    println("query: " + queryString)
+    play.api.Logger.debug("query: " + queryString)
 
     var parameters = collection.immutable.Map(request.queryString.toSeq: _*)
 
@@ -413,8 +413,8 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
 
     val totalRecords = q.res.getResults().getNumFound().intValue()
 
-    println("Page #: " + pageNo)
-    println("totalRecords #: " + totalRecords)
+    play.api.Logger.debug("Page #: " + pageNo)
+    play.api.Logger.debug("totalRecords #: " + totalRecords)
 
     pagination.update(totalRecords, pageNo)
 
@@ -442,7 +442,7 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
       pageList = pageList :+ JsNumber(page.##)
     }
 
-    println("pagesList: " + pageList)
+    play.api.Logger.debug("pagesList: " + pageList)
 
     val jsonPager = Json.obj("totalItems" -> JsNumber(pagination.getTotalItems()),
       "hasPreviousPage" -> JsBoolean(pagination.hasPreviousPage()),
@@ -482,7 +482,7 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
   def createQuery(query: String, parameters: Map[String, Seq[String]]) = {
     val map = parameters
     val parametersAsJava = map.map { case (k, v) => (k, v.asJava) }.asJava;
-    println("doInit: " + parametersAsJava);
+    play.api.Logger.debug("doInit: " + parametersAsJava);
     new Query(query, parametersAsJava)
   }
 
@@ -490,7 +490,7 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
     // parses parameters and creates me a query object
     val parametersAsJava = parameters.map { case (k, v) => (k, v.asJava) }.asJava;
 
-    println("doExport")
+    play.api.Logger.debug("doExport")
 
     val q = new Query(query,
       getField("proximityPhrase1", parameters),
@@ -514,7 +514,7 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
   def doSearchForm(form: Form[SearchData], parameters: Map[String, Seq[String]]) = {
     val parametersAsJava = parameters.map { case (k, v) => (k, v.asJava) }.asJava;
     val query = new Query(getData(form.data.get("query")), getData(form.data.get("proximityPhrase1")), getData(form.data.get("proximityPhrase2")), getData(form.data.get("proximity")), getData(form.data.get("excludeWords")), getData(form.data.get("dateStart")), getData(form.data.get("dateEnd")), getData(form.data.get("url")), getData(form.data.get("hostDomainPublicSuffix")), getData(form.data.get("fileFormat")), getData(form.data.get("websiteTitle")), getData(form.data.get("pageTitle")), getData(form.data.get("author")), getData(form.data.get("collection")), parametersAsJava, getData(form.data.get("mode")))
-    println("form: " + form.data.get("action") + " " + query.responseParameters);
+    play.api.Logger.debug("form: " + form.data.get("action") + " " + query.responseParameters);
     solr.search(query)
   }
 
@@ -530,78 +530,78 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
 
   def suggestTitle(name: String) = Action { implicit request =>
     val result = solr.suggestTitle(name)
-    println("result: " + result.toString)
+    play.api.Logger.debug("result: " + result.toString)
     Ok(result.toString)
   }
 
   def suggestUrl(name: String) = Action { implicit request =>
     val result = solr.suggestUrl(name)
-    println("result: " + result.toString)
+    play.api.Logger.debug("result: " + result.toString)
     Ok(result.toString)
   }
 
   def suggestFileFormat(name: String) = Action { implicit request =>
     val result = solr.suggestFileFormat(name)
-    println("result: " + result.toString)
+    play.api.Logger.debug("result: " + result.toString)
     Ok(result.toString)
   }
 
   def suggestHost(name: String) = Action { implicit request =>
     val result = solr.suggestHost(name)
-    println("result: " + result.toString)
+    play.api.Logger.debug("result: " + result.toString)
     Ok(result.toString)
   }
 
   def suggestDomain(name: String) = Action { implicit request =>
     val result = solr.suggestDomain(name)
-    println("result: " + result.toString)
+    play.api.Logger.debug("result: " + result.toString)
     Ok(result.toString)
   }
 
   def suggestPublicSuffix(name: String) = Action { implicit request =>
     val result = solr.suggestPublicSuffix(name)
-    println("result: " + result.toString)
+    play.api.Logger.debug("result: " + result.toString)
     Ok(result.toString)
   }
 
   def suggestLinksHosts(name: String) = Action { implicit request =>
     val result = solr.suggestLinksHosts(name)
-    println("result: " + result.toString)
+    play.api.Logger.debug("result: " + result.toString)
     Ok(result.toString)
   }
 
   def suggestLinksDomains(name: String) = Action { implicit request =>
     val result = solr.suggestLinksDomains(name)
-    println("result: " + result.toString)
+    play.api.Logger.debug("result: " + result.toString)
     Ok(result.toString)
   }
 
   def suggestLinksPublicSuffixes(name: String) = Action { implicit request =>
     val result = solr.suggestLinksPublicSuffixes(name)
-    println("result: " + result.toString)
+    play.api.Logger.debug("result: " + result.toString)
     Ok(result.toString)
   }
 
   def suggestAuthor(name: String) = Action { implicit request =>
     val result = solr.suggestAuthor(name)
-    println("result: " + result.toString)
+    play.api.Logger.debug("result: " + result.toString)
     Ok(result.toString)
   }
 
   def suggestCollection(name: String) = Action { implicit request =>
     val result = solr.suggestCollection(name)
-    println("result: " + result.toString)
+    play.api.Logger.debug("result: " + result.toString)
     Ok(result.toString)
   }
 
   def suggestCollections(name: String) = Action { implicit request =>
     val result = solr.suggestCollections(name)
-    println("result: " + result.toString)
+    play.api.Logger.debug("result: " + result.toString)
     Ok(result.toString)
   }
 
   def getFacets = Action { implicit request =>
-    println("queryString: " + request.queryString)
+    play.api.Logger.debug("queryString: " + request.queryString)
     val pageParameter = request.getQueryString("page")
     val sortParameter = request.getQueryString("sort")
     val orderParameter = request.getQueryString("order")
@@ -613,30 +613,30 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
     pageParameter match {
       case Some(parameter) => {
         page = pageParameter.get.toInt
-        println("page: " + page)
+        play.api.Logger.debug("page: " + page)
       }
       case None => {
-        println("None")
+        play.api.Logger.debug("None")
       }
     }
 
     sortParameter match {
       case Some(parameter) => {
         sort = sortParameter.get
-        println("sort: " + sort)
+        play.api.Logger.debug("sort: " + sort)
       }
       case None => {
-        println("None")
+        play.api.Logger.debug("None")
       }
     }
 
     orderParameter match {
       case Some(parameter) => {
         order = orderParameter.get
-        println("order: " + order)
+        play.api.Logger.debug("order: " + order)
       }
       case None => {
-        println("None")
+        play.api.Logger.debug("None")
       }
     }
 
@@ -644,11 +644,11 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
     var results = queryResponse.getResults()
 
     val subCollections = queryResponse.getFacetField("collections")
-    println("facetQuery: " + subCollections)
+    play.api.Logger.debug("facetQuery: " + subCollections)
 
     val totalRecords = results.getNumFound().intValue()
 
-    println("totalRecords #: " + totalRecords)
+    play.api.Logger.debug("totalRecords #: " + totalRecords)
 
     pagination.update(totalRecords, page)
 
@@ -671,13 +671,13 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
       }
       val jsonObject = Json.obj("subcollection" -> jsArray)
       resultList = resultList :+ jsonObject
-      println("jsArray: " + jsArray)
+      play.api.Logger.debug("jsArray: " + jsArray)
     }
 
     for (i <- 1 until results.size()) {
       val result = results.get(i)
       val url = result.getFirstValue("url")
-      println("title: " + result.getFirstValue("title"))
+      play.api.Logger.debug("title: " + result.getFirstValue("title"))
       if (url ne null) {
         //	    	resultList = result.getFirstValue("url").toString() :: resultList
         val jsonObject = Json.obj("url" -> JsString(result.getFirstValue("url").toString()))
@@ -686,13 +686,13 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
     }
 
     val jsonPages = Json.obj()
-    println("jsonPages: " + jsonPages)
+    play.api.Logger.debug("jsonPages: " + jsonPages)
     var collectionJson =
       Json.obj(
         "collection" -> resultList,
         "pages" -> JsNumber(pagination.getTotalPages))
 
-    println("collectionJson: " + collectionJson)
+    play.api.Logger.debug("collectionJson: " + collectionJson)
 
     Ok(collectionJson)
   }
@@ -701,7 +701,7 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
     val user = request.user
     val corpora = if (user != null) myCorpora(user) else List[Corpus]()
 
-    println("resetting facets")
+    play.api.Logger.debug("resetting facets")
     solr.resetFacets()
     var parameters = collection.immutable.Map(request.queryString.toSeq: _*)
     resetParameters(parameters)
@@ -714,21 +714,21 @@ class Search @Inject()(cache: CacheApi, solr: Shine, pagination: Pagination)(imp
 
   def resetParameters(parameters: collection.immutable.Map[String, Seq[String]]) = {
     val map = collection.mutable.Map(parameters.toSeq: _*)
-    println("pre: " + map)
+    play.api.Logger.debug("pre: " + map)
     //    val javaMap = map.map { case (k, v) => (k, v.asJava) }.asJava;
     for ((k, v) <- map) {
       if (k.startsWith("facet.fields") || k.startsWith("f.")) {
         map.remove(k)
-        println("removed... " + k)
+        play.api.Logger.debug("removed... " + k)
       }
     }
-    println("post: " + map)
+    play.api.Logger.debug("post: " + map)
     map
   }
 
   def myCorpora(user: User) = {
     val corpora = models.Corpus.findByUser(user)
-    println("corpora size: " + corpora.size())
+    play.api.Logger.debug("corpora size: " + corpora.size())
     corpora.asScala.toList
   }
 }
