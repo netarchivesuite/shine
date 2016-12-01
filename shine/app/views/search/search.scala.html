@@ -82,9 +82,9 @@
 				} else {
 					dropdown.html(full + " <span class='caret'></span>");
 				}
-			} else {
+			} else { 			// Default value for the dropdown.
 				$('#modeValue').val('');
-				dropdown.html(sample + " <span class='caret'></span>");
+				dropdown.html(full + " <span class='caret'></span>");
 			}
 			
 			$('#search').on('click', function() {
@@ -245,7 +245,8 @@
 					   				<div class="input-group-btn">
 								        <button type="button" class="btn btn-primary dropdown-toggle search-dropdown" data-toggle="dropdown" aria-expanded="false" id="search-dropdown">Sample Mode <span class="caret"></span></button>
 								        <ul class="dropdown-menu" role="menu" id="search-menu">
-											<li id="sample"><a href="#">Sample Mode</a></li>
+											<!-- Sample mode is disabled -->
+											<!-- <li id="sample"><a href="#">Sample Mode</a></li> -->
 											<li id="full"><a href="#">Full Mode</a></li>
 										</ul>
 							      	</div><!-- /btn-group -->			
@@ -300,7 +301,8 @@
 					   				<div class="input-group-btn">
 								        <button type="button" class="btn btn-primary dropdown-toggle search-dropdown" data-toggle="dropdown" aria-expanded="false" id="search-dropdown">Sample Mode <span class="caret"></span></button>
 								        <ul class="dropdown-menu" role="menu" id="search-menu">
-											<li id="sample"><a href="#">Sample Mode</a></li>
+											<!-- Sample mode is disabled -->
+											<!-- <li id="sample"><a href="#">Sample Mode</a></li> -->
 											<li id="full"><a href="#">Full Mode</a></li>
 										</ul>
 							      	</div><!-- /btn-group -->			
