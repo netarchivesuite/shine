@@ -43,14 +43,14 @@
 		</div>
 	}
 	<h1>@title</h1>
-		
+
 	@if(user != null) {
         <table class="table table-condensed">
         	@for((search, index) <- searches.zipWithIndex) {
 				<tr>
 	               	<td>
               			<span class="search-name">@(search.name)</span>: @(search.description)<br/>
-              			@(search.summary)
+              			@Html(search.summary)
 	               	</td>
 	               	<td>
 						<input type="hidden" value="../@(search.url)" name="search-url" />
